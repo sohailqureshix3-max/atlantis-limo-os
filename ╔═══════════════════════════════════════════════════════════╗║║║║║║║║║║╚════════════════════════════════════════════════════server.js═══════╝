@@ -1,0 +1,78 @@
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import pool from './config/database.js';
+import driverRoutes from './routes/drivers.js';
+import vehicleRoutes from './routes/vehicles.js';
+import jobRoutes from './routes/jobs.js';
+import invoiceRoutes from './routes/invoices.js';
+import payrollRoutes from './routes/payroll.js';
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+  res.sendFile(new URL('../public/index.html', import.meta.url).pathname);
+});
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.get('/api', (req, res) => {
+  res.json({
+    name: 'Atlantis Limousine OS API',
+    version: '1.0.0',
+    endpoints: {
+      drivers: [
+        'POST /api/drivers',
+        'GET /api/drivers',
+        'GET /api/drivers/:id',
+        'PUT /api/drivers/:id'
+      ],
+      vehicles: [
+        'POST /api/vehicles',
+        'GET /api/vehicles',
+        'GET /api/vehicles/:id',
+        'PUT /api/vehicles/:id'
+      ],
+      jobs: [
+        'POST /api/jobs',
+        'GET /api/jobs/:id',
+        'GET /api/jobs/period',
+        'POST /api/jobs/:id/complete'
+      ],
+      invoices: [
+        'POST /api/invoices',
+        'GET /api/invoices/:id',
+        'GET /api/invoices/customer/:customerId'
+      ],
+      payroll: [
+        'POST /api/payroll/calculate',
+        'GET /api/payroll/:id',
+        'POST /api/payroll/:id/approve'
+      ]
+    }
+  });
+});
+
+app.use('/api/drivers', driverRoutes);
+app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/invoices', invoiceRoutes);
+app.use('/api/payroll', payrollRoutes);
+
+app.listen(PORT, () => {
+  console.log('\n╔═══════════════════════════════════════════════════════════╗');
+  console.log('║                                                           ║');
+  console.log('║        ATLANTIS LIMOUSINE OPERATING SYSTEM                ║');
+  console.log('║                                                           ║');
+  console.log('║        Server running at http://localhost:' + PORT + '           ║');
+  console.log('║                                                           ║');
+  console.log('╚═══════════════════════════════════════════════════════════╝\n');
+});
