@@ -1,0 +1,10 @@
+import express from 'express';
+const router = express.Router();
+router.post('/calculate', (req, res) => res.json({status: 'not implemented'}));
+router.get('/:id', (req, res) => res.json({status: 'not implemented'}));
+router.get('/driver/:driverId', (req, res) => res.json({status: 'not implemented'}));
+router.post('/:id/approve', (req, res) => res.json({status: 'not implemented'}));
+router.post('/:id/pay', (req, res) => res.json({status: 'not implemented'}));
+router.get('/:id/slip', (req, res) => res.json({status: 'not implemented'}));
+router.get('/period/summary', (req, res) => res.json({status: 'not implemented'}));
+export default router;
